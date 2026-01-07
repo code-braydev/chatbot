@@ -1,6 +1,6 @@
 "use client";
-import { SendHorizontal, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LoadingButton } from "./LoadingButton";
 
 export const ChatInput = ({
   input,
@@ -11,19 +11,19 @@ export const ChatInput = ({
   input: string;
   setInput: (input: string) => void;
   onSend: () => void;
-  isLoading: boolean; // Tipo booleano
+  isLoading: boolean;
 }) => {
-  const hasText = input.trim().length > 0;
-  const isDisabled = !hasText || isLoading;
+  const isDisabled = !input.trim() || isLoading;
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4 pb-6 pt-2">
       <div
         className={cn(
-          "sticky bottom-2.5 flex items-end transition-all duration-300 rounded-3xl p-1.5",
-          "bg-white/70 backdrop-blur-xl input-shadow",
-          "focus-within:bg-white",
-          isLoading && "opacity-80 cursor-not-allowed"
+          "flex items-end rounded-3xl p-1.5 transition-all duration-300 border border-white/40 dark:border-white/5",
+          "bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl input-shadow",
+          // Usamos la variable de fondo para el modo enfocado
+          "focus-within:bg-white dark:focus-within:bg-slate-950",
+          isLoading && "opacity-70 pointer-events-none"
         )}
       >
         <input
@@ -35,36 +35,15 @@ export const ChatInput = ({
           placeholder={
             isLoading ? "Ari está pensando..." : "Escribe un mensaje..."
           }
-          className="flex-1 bg-transparent border-none outline-none focus:ring-0 px-4 py-3 text-[15px] text-(--foreground) placeholder:text-(--foreground) disabled:cursor-not-allowed"
+          // Usamos la variable --foreground para el texto principal
+          className="flex-1 bg-transparent px-4 py-3 text-[15px] outline-none text-(--foreground) placeholder:text-(--foreground)/40"
         />
 
-        <button
-          onClick={onSend}
-          disabled={isDisabled}
-          className={cn(
-            "p-3 rounded-2xl transition-all duration-300 flex items-center justify-center relative min-w-11 min-h-11",
-            !isDisabled
-              ? "text-(--ari-purple) opacity-100 scale-105 active:scale-95"
-              : "text-(--ari-purple)/20 opacity-40 cursor-not-allowed"
-          )}
-        >
-          {!isDisabled && (
-            <div className="absolute inset-0 bg-(--ari-purple)/5 rounded-full animate-in fade-in zoom-in duration-300" />
-          )}
-
-          {isLoading ? (
-            <Loader2 size={20} className="animate-spin text-(--ari-purple)" />
-          ) : (
-            <SendHorizontal
-              size={20}
-              strokeWidth={2}
-              className={cn(
-                "relative z-10 transition-all duration-300",
-                hasText ? "drop-shadow-[0_2px_4px_rgba(157,124,251,0.2)]" : ""
-              )}
-            />
-          )}
-        </button>
+        <LoadingButton
+          isLoading={isLoading}
+          isDisabled={isDisabled}
+          onSend={onSend}
+        />
       </div>
     </div>
   );

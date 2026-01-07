@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
 import { ChatBubble } from "./ChatBubble";
+import { TypingIndicator } from "./TypingIndicator";
 
 interface Message {
   id: string;
@@ -19,21 +20,31 @@ export const ChatMessages = ({
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  // Función para hacer scroll hacia el final
+  const scrollToBottom = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollTo({
         top: scrollRef.current.scrollHeight,
         behavior: "smooth",
       });
     }
+  };
+
+  // Se ejecuta cada vez que hay mensajes nuevos o Ari empieza a pensar
+  useEffect(() => {
+    scrollToBottom();
+    // Un pequeño delay extra para asegurar que las animaciones de entrada terminaron
+    const timeout = setTimeout(scrollToBottom, 100);
+    return () => clearTimeout(timeout);
   }, [messages, isLoading]);
 
   return (
     <div
       ref={scrollRef}
-      className="flex-1 overflow-y-auto px-4 py-6 space-y-2 chat-container scroll-smooth"
+      className="flex-1 overflow-y-auto px-4 pt-6 pb-32 chat-container scroll-smooth"
     >
       <div className="max-w-3xl mx-auto w-full flex flex-col">
+        {/* Renderizado de mensajes históricos */}
         {messages.map((msg) => (
           <ChatBubble
             key={msg.id}
@@ -44,17 +55,8 @@ export const ChatMessages = ({
           />
         ))}
 
-        {isLoading && (
-          <div className="flex w-full mb-6 message-animate justify-start">
-            <div className="bg-white/70 backdrop-blur-md p-4 rounded-3xl rounded-tl-none shadow-sm border border-white/40">
-              <div className="flex gap-1.5 items-center h-5">
-                <div className="w-1.5 h-1.5 bg-(--ari-purple) rounded-full animate-bounce [animation-delay:-0.3s]" />
-                <div className="w-1.5 h-1.5 bg-(--ari-purple) rounded-full animate-bounce [animation-delay:-0.15s]" />
-                <div className="w-1.5 h-1.5 bg-(--ari-purple) rounded-full animate-bounce" />
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Indicador de escritura: Aparece como una burbuja más al final */}
+        {isLoading && <TypingIndicator />}
       </div>
     </div>
   );

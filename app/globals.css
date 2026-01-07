@@ -1,144 +1,150 @@
 @import "tailwindcss";
 
+/* 1. VARIABLES DE ENTORNO (Tokens de Diseño)
+-------------------------------------------------- */
 :root {
-  /* MODO CLARO - Ari Lavanda Pastel */
+  /* Modo Claro */
   --background: #ebe4ff; 
   --background-rgb: 235, 228, 255;
-  --foreground: #2d2445; 
-  
-  --ari-main: #9d7cfb;    
-  --ari-accent: #0891b2;  
-  --ari-gradient: linear-gradient(135deg, #9d7cfb 0%, #22d3ee 100%);
-  
-  /* Configuración de Chat */
-  --chat-bubble-ari: rgba(255, 255, 255, 0.9);
-  --chat-bubble-user: #8b5cf6;
-  --chat-border: transparent; /* Eliminamos bordes por defecto */
+  --foreground: #2d2445;
+  --foreground-rgb: 45, 36, 69;
+
+  --header-bg: #d9cefb;
+  --footer-bg: rgba(243, 240, 255, 0.9);
+  --header-shadow: rgba(45, 36, 69, 0.1);
+  --status-border: #d9cefb;
+
+  --ari-main: #9d7cfb;
+  --ari-accent: #22d3ee;
+  --ari-gradient: linear-gradient(135deg, var(--ari-main) 0%, var(--ari-accent) 100%);
   
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #020617;
+    /* Modo Oscuro */
+    --background: #020617; 
     --background-rgb: 2, 6, 23;
-    --foreground: #f8fafc;
-    --ari-main: #7c3aed;
+    --foreground: #f1f5f9;
+    --foreground-rgb: 241, 245, 249;
+
+    --header-bg: #0f172a; 
+    --footer-bg: rgba(2, 6, 23, 0.95);
+    --header-shadow: rgba(0, 0, 0, 0.5);
+    --status-border: #0f172a;
+
+    --ari-main: #a855f7;
+    --ari-accent: #06b6d4;
+    --ari-gradient: linear-gradient(135deg, var(--ari-main) 0%, var(--ari-accent) 100%);
+    
     color-scheme: dark;
   }
 }
 
+/* 2. CONFIGURACIÓN DEL TEMA (Tailwind v4)
+-------------------------------------------------- */
 @theme inline {
   --color-ari-purple: var(--ari-main);
   --color-ari-cyan: var(--ari-accent);
+  --color-header-bg: var(--header-bg);
   --background-image-ari-linear: var(--ari-gradient);
   --font-sans: var(--font-jakarta), ui-sans-serif, system-ui;
-}
-
-/* --- BASE Y TIPOGRAFÍA --- */
-html, body {
-  overscroll-behavior: none;
-  touch-action: manipulation;
-  background-color: var(--background);
-  color: var(--foreground);
-  -webkit-font-smoothing: antialiased;
   
-  /* Letra con cuerpo y legibilidad */
-  font-family: var(--font-jakarta), sans-serif;
-  font-weight: 500; 
-  letter-spacing: -0.015em;
-
-  background-image: radial-gradient(circle at top right, rgba(255, 255, 255, 0.5) 0%, transparent 40%),
-                    radial-gradient(circle at bottom left, rgba(157, 124, 251, 0.15) 0%, transparent 40%);
+  /* Registro oficial de animación */
+  --animation-messenger: messenger-dots 1.2s infinite ease-in-out both;
 }
 
-/* Forzamos consistencia en elementos de texto */
-input, textarea, button {
-  font-family: var(--font-jakarta), sans-serif;
-  font-weight: 600;
+/* 3. ESTILOS BASE
+-------------------------------------------------- */
+@layer base {
+  *, ::after, ::before {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    overscroll-behavior: none;
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.5s ease, color 0.5s ease;
+  }
+
+  input, textarea, button {
+    font-family: inherit;
+    font-weight: 500;
+    outline: none !important;
+  }
+
+  input::placeholder {
+    font-weight: 400;
+    opacity: 0.4;
+  }
 }
 
-input::placeholder {
-  font-weight: 500;
-  opacity: 0.4;
+/* 4. COMPONENTES Y UTILIDADES
+-------------------------------------------------- */
+@layer components {
+  .input-shadow {
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .input-shadow:focus-within {
+    box-shadow: 0 10px 40px -10px rgba(157, 124, 251, 0.15);
+    transform: translateY(-1px);
+  }
+
+  .glass-effect {
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+  }
+
+  /* Delays de animación */
+  .delay-dots-1 { animation-delay: -0.32s !important; }
+  .delay-dots-2 { animation-delay: -0.16s !important; }
 }
 
-/* --- COMPONENTES BASADOS EN SOMBRAS (Sin Bordes) --- */
-.glass {
-  background: rgba(var(--background-rgb), 0.7);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  /* Sombra sutil para separar el header del fondo */
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
-  border: none !important;
+/* 5. ANIMACIONES (Keyframes)
+-------------------------------------------------- */
+@keyframes messenger-dots {
+  0%, 80%, 100% { 
+    transform: scale(0.6); 
+    opacity: 0.3; 
+  }
+  40% { 
+    transform: scale(1.1); 
+    opacity: 1; 
+  }
 }
 
-/* Sombra específica para el Input "Nube" */
-.input-shadow {
-  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+/* 6. SCROLLBAR PERSONALIZADO
+-------------------------------------------------- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--foreground-rgb), 0.1) transparent;
 }
 
-.input-shadow:focus-within {
-  box-shadow: 0 15px 50px -12px rgba(157, 124, 251, 0.15);
-  transform: translateY(-1px);
+::-webkit-scrollbar {
+  width: 5px;
 }
 
-/* --- ANIMACIONES Y LIMPIEZA --- */
-@keyframes floatIn {
-  from { opacity: 0; transform: translateY(12px) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-.message-animate {
-  animation: floatIn 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-/* Reset de Foco para evitar el recuadro azul/negro */
-input:focus, textarea:focus, button:focus {
-  outline: none !important;
-  box-shadow: none !important;
-  --tw-ring-color: transparent !important;
-}
-
-/* Solo visible para navegación por teclado */
-:focus-visible {
-  outline: 2px solid var(--ari-main) !important;
-  outline-offset: 4px;
-}
-
-::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-thumb {
-  background: var(--ari-gradient);
+  background: rgba(var(--foreground-rgb), 0.1);
   border-radius: 10px;
 }
 
-/* --- SELECCIÓN Y FOCO LIMPIO (RESETS) --- */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(var(--foreground-rgb), 0.2);
+}
+
 ::selection {
   background-color: rgba(157, 124, 251, 0.3);
-  color: var(--foreground);
-}
-
-/* Eliminamos el anillo/focus por defecto del navegador en todos los elementos */
-*:focus, *:focus-visible {
-  outline: none !important;
-  box-shadow: none !important;
-  --tw-ring-color: transparent !important;
-  --tw-ring-offset-width: 0px !important;
-}
-
-/* El foco solo aparece visualmente si se usa el teclado para navegar */
-:focus-visible {
-  outline: 2px solid var(--ari-main) !important;
-  outline-offset: 4px;
-}
-
-/* Comportamiento de puntero */
-button, a {
-  cursor: pointer;
-}
-
-/* Evita cambios de color de fondo automáticos en móviles al enfocar */
-input:focus {
-  background-color: transparent;
 }

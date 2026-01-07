@@ -23,17 +23,13 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <body
-        className={`${jakarta.variable} font-sans antialiased min-h-screen flex flex-col bg-(--background) text-(--foreground) transition-colors duration-500`}
+        className={`${jakarta.variable} font-sans antialiased h-screen flex flex-col bg-(--background) text-(--foreground)`}
       >
-        {/* Fondo Ambiental */}
-        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none select-none">
-          <div className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-(--ari-purple)/10 blur-[120px]" />
-          <div className="absolute -bottom-[10%] -right-[5%] w-[40%] h-[40%] rounded-full bg-(--ari-cyan)/10 blur-[100px]" />
-        </div>
-
+        {/* El Header ahora es parte del flujo, empuja al main hacia abajo */}
         <Header />
 
-        <main className="flex-1 flex flex-col relative w-full overflow-hidden">
+        {/* El main ocupa todo el espacio restante sin que nada se le encime */}
+        <main className="flex-1 overflow-hidden relative w-full flex flex-col bg-(--background)">
           {children}
         </main>
 

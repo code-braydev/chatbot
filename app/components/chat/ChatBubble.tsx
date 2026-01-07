@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { Check, CheckCheck } from "lucide-react";
+import { CheckCheck } from "lucide-react";
 
 interface ChatBubbleProps {
   role: "user" | "assistant";
@@ -20,49 +20,42 @@ export const ChatBubble = ({
   return (
     <div
       className={cn(
-        "flex w-full mb-6 message-animate",
+        "flex w-full mb-4 px-2",
         isAri ? "justify-start" : "justify-end"
       )}
     >
       <div
         className={cn(
-          "relative p-4 rounded-3xl transition-all duration-300",
-          "max-w-[85%] sm:max-w-[70%]",
-          isAri
-            ? "bg-white/70 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-(--foreground) rounded-tl-none"
-            : "bg-(--ari-linear) text-(--foreground) shadow-[0_10px_25px_-5px_rgba(157,124,251,0.4)] rounded-tr-none font-medium"
+          "relative px-4 py-2.5 transition-all duration-300 max-w-[85%] sm:max-w-[70%]",
+          "rounded-2xl shadow-sm",
+          "bg-white dark:bg-slate-900",
+          "text-slate-700 dark:text-slate-200",
+          "shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] dark:shadow-[0_2px_15px_-3px_rgba(0,0,0,0.3)]",
+          isAri ? ["rounded-tl-none"] : ["rounded-tr-none"]
         )}
       >
-        {isAri && (
-          <div className="absolute inset-0 rounded-3xl bg-linear-to-br from-(--ari-purple)/5 to-transparent pointer-events-none" />
-        )}
+        {/* Contenido */}
+        <p className="text-[14.5px] leading-relaxed">{content}</p>
 
-        <p className="relative z-10 text-[15px] leading-relaxed tracking-tight">
-          {content}
-        </p>
-
+        {/* Info de mensaje (Hora y Checks) */}
         <div
           className={cn(
-            "text-[10px] mt-2 flex items-center gap-1 font-bold uppercase tracking-wider",
-            isAri ? "justify-start opacity-40" : "justify-end opacity-60"
+            "flex items-center gap-1.5 mt-1 justify-end text-slate-400"
           )}
         >
-          {time}
+          <span className="text-[9px] font-medium tracking-tight">{time}</span>
 
           {!isAri && (
-            <div className="flex ml-0.5 items-center">
-              {status === "sending" ? (
-                <div className="w-2.5 h-2.5 border-2 border-(--foreground)/20 border-t-(--foreground) rounded-full animate-spin" />
-              ) : status === "sent" ? (
-                <Check size={13} strokeWidth={3} className="opacity-40" />
-              ) : (
-                <CheckCheck
-                  size={13}
-                  strokeWidth={3}
-                  className="text-(--ari-cyan) animate-in zoom-in duration-300"
-                />
+            <CheckCheck
+              size={13}
+              strokeWidth={2.5}
+              className={cn(
+                "transition-colors",
+                status === "read"
+                  ? "text-cyan-300"
+                  : "text-slate-400 dark:text-white/30"
               )}
-            </div>
+            />
           )}
         </div>
       </div>
